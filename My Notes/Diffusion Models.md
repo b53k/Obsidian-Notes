@@ -60,7 +60,7 @@ $$\large p_\theta(x) = \large p_\theta(f^{-1}(x)) \Big|\frac{dz}{dx}\Big| = \lar
 Multivariable formulation of the above expression gives us;$$\large p_\theta(\textbf{x}) = \large p_\theta(f^{-1}(\textbf{x})) \Big| det \Big(\frac{df^{-1}}{d\textbf{x}}\Big)\Big|$$![[Pasted image 20230101224929.png]]
 
 ## Diffusion Models
-sdfsdf
+
 
 
 ## Notes 📝
