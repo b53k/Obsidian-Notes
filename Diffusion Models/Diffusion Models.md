@@ -194,8 +194,7 @@ In #Diffusion-Model, the forward process is fixed and only reverse process needs
 &= -\text{log}\ p_\theta(x_0) + \mathbb{E}_{x_{1:T}\ \sim\ q(x_{1:T}|x_0)}\Bigg[ \text{log}\ \frac{q(x_{1:T}|x_0)}{\frac{p_\theta(x_{1:T})\ p_\theta(x_0|x_{1:T})}{p_\theta(x_0)}} \Bigg] \\
 &= \mathbb{E}_{x_{1:T}\ \sim\ q(x_{1:T}|x_0)}\Big[ \text{log}\ \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:1:T})} \Big]
 \end{align}$$
-Here, #Variational-Lower-Bound is $\large \mathbb{E}_{x_{1:T}\ \sim \  q(x_{1:T}|x_0)}$ and $$\large -\text{log}\ p_\theta(x_0) \leq \large \mathbb{E}_{x_{1:T}\ \sim \  q(x_{1:T}|x_0)}\Big[ \text{log}\ \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:1:T})} \Big] \tag{7}$$
-Now,$$\large \begin{align}
+Here, #Variational-Lower-Bound is $\large \mathbb{E}_{x_{1:T}\ \sim \  q(x_{1:T}|x_0)}$ and $$\large -\text{log}\ p_\theta(x_0) \leq \large \mathbb{E}_{x_{1:T}\ \sim \  q(x_{1:T}|x_0)}\Big[ \text{log}\ \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:1:T})} \Big] \tag{7}$$Now, $$\large \begin{align}
 \text{log}\ \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})} &= \text{log}\ \frac{\prod_{t=1}^Tq\ (x_t|x_{t-1})}{p(x_T)\prod_{t=1}^T\ p_\theta(x_{t-1}|x_t)} \\
 &= -\text{log}\ (p(x_T)) + \text{log}\ \frac{\prod_{t=1}^Tq\ (x_t|x_{t-1})}{\prod_{t=1}^T\ p_\theta(x_{t-1}|x_t)}\\
 &= -\text{log}\ (p(x_T)) + \sum_{t=1}^T\text{log}\ \frac{q(x_t|x_{t-1})}{p_\theta(x_{t-1}|x_t)}\\

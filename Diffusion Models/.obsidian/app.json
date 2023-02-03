@@ -2,9 +2,9 @@
   "showInlineTitle": false,
   "pdfExportSettings": {
     "includeName": false,
-    "pageSize": "Letter",
+    "pageSize": "Tabloid",
     "landscape": false,
-    "margin": "0",
+    "margin": "2",
     "downscalePercent": 100
   },
   "attachmentFolderPath": "Assets",
