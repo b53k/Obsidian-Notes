@@ -214,7 +214,7 @@ Now,$$\large \begin{align}
 \end{align}$$
 We can further simplify the first term above because;$$\large
 p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \beta_t I) \ \ \ \&\ \ \ q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; \ \tilde\mu_t(x_t,x_0), \tilde \beta_t I)$$
-And,$$\large \begin{align}
+And, $$\large \begin{align}
 \tilde \mu_t(x_t,x_0) &:= \frac{\sqrt{\overline{\alpha}_{t-1}}\ \beta_t}{1 - \overline\alpha_t}\ x_0\ + \ \frac{\sqrt{\alpha_t}(1-\overline{\alpha}_{t-1})}{1-\overline\alpha_t}\ x_t \\
 \tilde{\beta_t} &:= \frac{1-\overline{\alpha}_{t-1}}{1-\overline{\alpha}_t}\beta_t
 \end{align}$$where $\large \alpha_t = 1 - \beta_t$ and $\large \overline{\alpha}_t = \prod_{t=s}^t \alpha_s$ and further simplification as shown in <span style="color: magenta"><i>Denoising Diffusion Probabilistic Models [2020]</i></span> yields the loss function$$\large \color{red}L_t \sim || \epsilon - \epsilon_\theta(x_t, t)||_2^2$$where, $\large \epsilon := \mathcal{N}(0, I)$ and $\large (x_t,t)  = \big(\sqrt{\overline{\alpha}_t}\ x_0 + \sqrt{1 - \overline{\alpha}_t}\ \epsilon,\ t\big)$
