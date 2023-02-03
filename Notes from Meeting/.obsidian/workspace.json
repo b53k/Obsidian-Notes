@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "ef1421c8df85e373",
+            "id": "09a80402f4bc4547",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2 Cyclical Monotonicity and Kantorovich.md",
+                "file": "Meeting 1.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,7 +69,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "4100ece0194f0dd8",
@@ -85,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2 Cyclical Monotonicity and Kantorovich.md",
+                "file": "Meeting 1.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2 Cyclical Monotonicity and Kantorovich.md",
+                "file": "Meeting 1.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2 Cyclical Monotonicity and Kantorovich.md"
+                "file": "Meeting 1.md"
               }
             }
           }
@@ -146,17 +147,17 @@
       "templates:Insert template": false
     }
   },
-  "active": "ef1421c8df85e373",
+  "active": "233ef7ad879dec43",
   "lastOpenFiles": [
-    "1 Introduction and 1-D Monge.pdf",
-    "1 Introduction and 1-D Monge.md",
-    "2 Cyclical Monotonicity and Kantorovich.md",
-    "Untitled.canvas",
+    "Untitled.md",
+    "Meeting 1.md",
     "Templates/Template.md",
+    "1 Sub-Gaussian.md",
+    "2 Cyclical Monotonicity and Kantorovich.md",
+    "1 Introduction and 1-D Monge.md",
+    "Untitled.canvas",
     "Assets/Pasted image 20230111164526.png",
     "Assets/Pasted image 20230110152522.png",
-    "Pasted image 20230110152313.png",
-    "Pasted image 20230110152328.png",
-    "Diffusion Models.pdf"
+    "Pasted image 20230110152313.png"
   ]
 }

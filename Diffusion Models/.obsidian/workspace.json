@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#Va",
                 "matchingCase": true,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -65,7 +65,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -147,7 +148,7 @@
       "templates:Insert template": false
     }
   },
-  "active": "233ef7ad879dec43",
+  "active": "646811b8a094c1d8",
   "lastOpenFiles": [
     "Diffusion Models.pdf",
     "Diffusion Models.md",

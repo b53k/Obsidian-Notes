@@ -1,0 +1,13 @@
+{
+  "showInlineTitle": false,
+  "pdfExportSettings": {
+    "includeName": false,
+    "pageSize": "Tabloid",
+    "landscape": false,
+    "margin": "1",
+    "downscalePercent": 100
+  },
+  "attachmentFolderPath": "./Assets",
+  "spellcheck": true,
+  "readableLineLength": true
+}
