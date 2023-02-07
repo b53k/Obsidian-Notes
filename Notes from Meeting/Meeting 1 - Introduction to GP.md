@@ -1,4 +1,4 @@
-<center> <h1> Meeting 1 </h1></center>
+<center> <h1> Meeting 1 - Introduction to Gaussian Process </h1></center>
 <center><span style="color: red">🗓️Date: </span><span style="color: blue">02-01-2023</span></center> 
 <center><span style="color: red">🕐Time: </span><span style="color: blue">13:13</span></center><right><span style="color: orange">Bipin Koirala
 </span></right><hr>

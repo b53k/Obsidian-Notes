@@ -1,0 +1,101 @@
+<center> <h1> Model Selection for Gaussian Process Regression </h1></center>
+<center><span style="color: red">🗓️Date: </span><span style="color: blue">02-05-2023</span></center> 
+<center><span style="color: red">🕐Time: </span><span style="color: blue">22:25</span></center><right><span style="color: orange">Bipin Koirala
+</span></right><hr>
+
+```toc
+	style: number
+```
+<hr>
+
+## Preliminary
+
+In a regression setting, we are interested in finding an optimal map $\large f(x)$ between data points and labels/ function values. 
+$$\large f: X \to Y$$
+#Gaussian-Process can be used to represent a prior distribution over a space of functions. Gaussian Process can be written as,
+$$\large y = \large f(x) \sim GP\bigg(m(x), \ k(x,x')\bigg)$$
+
+```ad-note
+collapse: open
+This Note contains the following:
+
+(1) Compute the marginal likelihood for Gaussian Process Model
+
+(2) Compute the gradients of (1) w.r.t the hyper-parameters of kernel
+
+(3) Check (2) using Standard Finite Difference
+
+(4) Evaluate (1) and (2) to scipy's 'SLSQP' to maximize log marginal likelihood 
+```
+
+<hr>
+
+## Model Selection for GP Regression
+
+Although Gaussian Process is a non-parametric model, the so called 'hyper-parameters' in the kernel heavily influence the inference process. It is therefore essential to select the best possible parameters for the kernel. For example in the R.B.F-kernel; the *length* ($\large l$) and *scale* ($\large \sigma$) are the hyper-parameters.
+$$\large k(x,x') = \sigma^2 \text{ exp }\Big(\frac{|x-x'|^2}{2l^2}\Big)$$
+where, $\large l$ controls the 'reach of influence on neighbors' and $\large \sigma$ dictates the average amplitude from the mean of the function.
+
+
+## Marginal Likelihood
+
+```ad-note
+title: Bayes' Rule
+collapse: open
+
+$$\text{Posterior} = \frac{\text{Likelihood} \times \  \text{Prior}}{\text{Marginal Likelihood}}$$
+
+$$\mathbb{P}(\theta|y,X) = \frac{\mathbb{P}(y|X,\theta) \times \  \mathbb{P}(\theta)}{\mathbb{P}(y|X)}$$
+```
+
+A #Marginal-Likelihood is a likelihood function that has been integrated over the parameter space. It represents the probability of generating the observed sample from a #prior and is often referred to as the #model-evidence or #evidence.
+
+Let $\large \theta$ represent the parameters of the model. We now formulate a #prior over the output of the function as a #Gaussian-Process.
+$$\large \mathbb{P}(f|X,\theta) = \mathcal{N}\Big(0, k(x,x')\Big) \tag{1}$$
+We can always transform the data to have zero mean and $(1)$ can be viewed as a general case. Assume that the #likelihood takes the following form $$\large \mathbb{P}(Y|f) \sim \mathcal{N}(f, \sigma_n^2I) \tag{2}$$
+$(2)$ tells that the observations $\large y$ are subject to additive Gaussian noise. Now, the joint distribution is given by; $$\large \mathbb{P}(Y,f|X,\theta) = \mathbb{P}(Y|f)\ \mathbb{P}(f|X,\theta) \tag{3}$$
+It is worth noting that we would eventually like to optimize the hyper-parameters $\theta$ for the kernel function. However, the #prior here is over the mapping $\large f$ and not any parameters directly. In the <b><i>evidence-based</i></b> framework, which approximates Bayesian averaging by optimizing the #Marginal-Likelihood -likelihood, we can make use of the denominator part in the <i><b>Bayes' Rule</i></b> as an objective function for optimization. For this we take the joint distribution $(3)$ and marginalize over $\large f$ since we are not directly interested in optimizing it. This can be done in the following way: $$\large \begin{align}\mathbb{P}(Y|X,\theta) &= \int \mathbb{P}(Y,f|X,\theta)\ df \\
+&= \int \mathbb{P}(Y|f)\ \mathbb{P}(f|X,\theta)\ df
+\end{align} \tag{4}$$$(4)$ is an integration performed all possible spaces of $\large f$ and it aims to remove $\large f$
+from the distribution of $\large Y$. After marginalization $\large Y$ is no longer dependent on $\large f$ but it depends on the hyper-parameters $\large \theta$.
+
+As per <span style="color: orange">Rasmussen & Williams</span>, the log marginal likelihood is given by; $$\large \text{log }\mathbb{P}(y|X,\theta) = -\frac{1}{2}y^TK_y^{-1}y - \frac{1}{2}\text{log }|K_y| - \frac{n}{2}\text{log }(2\pi) \tag{5}$$
+where $\large K_y = K_f + \sigma_n^2I$  is the covariance matrix for the noisy targets $\large y$ and $\large K_f$ is the covariance matrix for the noise-free latent $\large f$. The first term penalizes wrong prediction, second penalizes model complexity and the third monomial is normalization term.
+
+## Gradients of Marginal Likelihood
+
+```ad-note
+collapse: open
+title: Recall
+
+$\large \frac{\partial}{\partial \theta}K^{-1} = -K^{-1}\frac{\partial K}{\partial \theta}K^{-1}$
+
+
+$\large \frac{\partial}{\partial \theta}\text{log }|K| = \text{trace }\big(K^{-1}\frac{\partial K}{\partial \theta}\big)$
+```
+
+Now, the partial derivatives w.r.t. the hyper-parameters is given by; $$\large\begin{align}
+\frac{\partial}{\partial \theta_j}\text{log }\mathbb{P}(y|X,\theta) &= \frac{1}{2}y^TK^{-1}\frac{\partial K}{\partial \theta_j}K^{-1}y - \frac{1}{2}\text{trace }\big(K^{-1}\frac{\partial K}{\partial \theta_j} \big)\\
+&= \frac{1}{2}\text{trace }\bigg((\alpha\alpha^T - K^{-1})\frac{\partial K}{\partial \theta_j} \bigg) \tag{6}
+\end{align}$$
+where, $\large \alpha = K^{-1}y$
+
+```ad-warning
+collapse: open
+
+In general, computing the inverse of a matrix directly (e.g: np.linalg.inv()) is not stable and there is a loss of precision. In the case when the matrix is positive definite, Cholesky decompostion can be used to compute inverse.
+
+Example:<br>
+
+Let $K$ be a symmetric positive definite matrix. Now, if we want to calculate $\alpha = K^{-1}y$, we can do the following:
+
+$$K = \text{Cholesky } \rightarrow LL^T$$
+
+
+$$K^{-1} = (L^{T})^{-1}L^{-1}$$
+
+
+$$\alpha = \text{np.linalg.solve(L.T, np.linalg.solve(L, y))}$$
+```
+
+
