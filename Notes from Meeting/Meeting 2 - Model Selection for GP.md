@@ -54,7 +54,7 @@ Let $\large \theta$ represent the parameters of the model. We now formulate a #p
 $$\large \mathbb{P}(f|X,\theta) = \mathcal{N}\Big(0, k(x,x')\Big) \tag{1}$$
 We can always transform the data to have zero mean and $(1)$ can be viewed as a general case. Assume that the #likelihood takes the following form $$\large \mathbb{P}(Y|f) \sim \mathcal{N}(f, \sigma_n^2I) \tag{2}$$
 $(2)$ tells that the observations $\large y$ are subject to additive Gaussian noise. Now, the joint distribution is given by; $$\large \mathbb{P}(Y,f|X,\theta) = \mathbb{P}(Y|f)\ \mathbb{P}(f|X,\theta) \tag{3}$$
-It is worth noting that we would eventually like to optimize the hyper-parameters $\theta$ for the kernel function. However, the #prior here is over the mapping $\large f$ and not any parameters directly. In the <b><i>evidence-based</i></b> framework, which approximates Bayesian averaging by optimizing the #Marginal-Likelihood -likelihood, we can make use of the denominator part in the <i><b>Bayes' Rule</i></b> as an objective function for optimization. For this we take the joint distribution $(3)$ and marginalize over $\large f$ since we are not directly interested in optimizing it. This can be done in the following way: $$\large \begin{align}\mathbb{P}(Y|X,\theta) &= \int \mathbb{P}(Y,f|X,\theta)\ df \\
+It is worth noting that we would eventually like to optimize the hyper-parameters $\theta$ for the kernel function. However, the #prior here is over the mapping $\large f$ and not any parameters directly. In the <b><i>evidence-based</i></b> framework, which approximates Bayesian averaging by optimizing the #Marginal-Likelihood we can make use of the denominator part in the <i><b>Bayes' Rule</i></b> as an objective function for optimization. For this we take the joint distribution $(3)$ and marginalize over $\large f$ since we are not directly interested in optimizing it. This can be done in the following way: $$\large \begin{align}\mathbb{P}(Y|X,\theta) &= \int \mathbb{P}(Y,f|X,\theta)\ df \\
 &= \int \mathbb{P}(Y|f)\ \mathbb{P}(f|X,\theta)\ df
 \end{align} \tag{4}$$$(4)$ is an integration performed all possible spaces of $\large f$ and it aims to remove $\large f$
 from the distribution of $\large Y$. After marginalization $\large Y$ is no longer dependent on $\large f$ but it depends on the hyper-parameters $\large \theta$.
@@ -97,5 +97,139 @@ $$K^{-1} = (L^{T})^{-1}L^{-1}$$
 
 $$\alpha = \text{np.linalg.solve(L.T, np.linalg.solve(L, y))}$$
 ```
+
+<hr>
+
+## Implementation
+
+```python
+def kernel(x, xp, σ, l):
+	'''k(x,x') = sigma^2 exp(-0.5*length^2*|x-x'|^2)'''
+	length = l
+	sq_norm = (scipy.spatial.distance.cdist(x, xp))**2
+	return σ**2 * np.exp(-0.5*sq_norm/(length**2))
+
+
+def dKdL(x1, x2, σ, l):
+	'''
+	computes partial derivative of K w.r.t length (l)
+	arg: x1 = (N1, D), x2 = (N2, D)
+	return: (N1, N2)
+	'''
+	sq_norm = (scipy.spatial.distance.cdist(x1, x2))**2
+	return (σ**2) * np.exp(-sq_norm/(2*l**2)) * (sq_norm) / (l**3)
+
+def dKdσ(x1, x2, σ, l):
+	'''
+	computes partal derivatice of K w.r.t sigma (std not variance)
+	arg: x1 = (N1, D), x2 = (N2, D)
+	return: (N1, N2)
+	'''
+	sq_norm = (scipy.spatial.distance.cdist(x1, x2))**2
+	return 2*σ*np.exp(-sq_norm/(2*l**2))
+
+
+def dLdt(a, iKxx, dKdt):
+	'''
+	computes gradient of log marginal likelihood w.r.t. a hyper-parameter
+	i.e. either sigma or length
+	'''
+	return 0.5**np.trace(np.dot(a @ a.T - iKxx), dKdt)
+
+
+def f_opt(kernel, X, y, σ, l):
+	'''
+	Evalaute Negative-Log Marginal Likelihood
+	'''
+	σ_n = 0.1 # std of noise hard-coded for now
+	K = kernel(X,X, σ = σ, l = l) + (σ_n**2)*np.eye(X.shape[0])
+	L = np.linalg.cholesky(K) + 1e-12 # Cholesky decomposition
+	a = np.linalg.solve(L.T, np.linalg.solve(L, y)) # compute alpha
+	
+	#log_likelihood = -0.5 * y.T @ a - 0.5 * np.trace(np.log(L)) - 0.5 * X.shape[0] * np.log(2*np.pi)
+	log_likelihood = -0.5 * y.T @ a - 0.5 * np.log(np.linalg.det(K)) - 0.5 * X.shape[0] * np.log(2*np.pi)
+	
+	return -log_likelihood
+
+
+def grad_f(kernel, X, y, l, σ):
+	'''
+	Compute gradient of objective function w.r.t. two parameters
+	'''
+	l, σ = params
+	σ_n = 0.1 # std of noise hard-coded for now
+	K = kernel(X,X, σ = σ, l = l) + (σ_n**2)*np.eye(X.shape[0])
+	L = np.linalg.cholesky(K) # Cholesky decomposition
+	a = np.linalg.solve(L.T, np.linalg.solve(L, y)) # compute alpha
+	
+	inv_k = np.linalg.inv(K)
+	grad = np.empty([2,])
+	grad[0] = dLdt(a = a, iKxx = inv_k, dKdt = dKdσ(X, X, σ, l)) # gradient w.r.t sigma
+	grad[1] = dLdt(a = a, iKxx = inv_k, dKdt = dKdL(X, X, σ, l)) # gradient w.r.t length
+	
+	return grad
+
+  
+
+def marginal(params, X, y):
+	'''
+	Evalaute Negative-Log Marginal Likelihood -- for scipy optimization
+	'''
+	#print (params)
+	l, σ = params
+	σ_n = 0.1 # std of noise hard-coded for now
+	K = kernel(X, X, σ = σ, l = l) + (σ_n**2)*np.eye(X.shape[0])
+	L = np.linalg.cholesky(K) + 1e-12 # Cholesky decomposition
+	a = np.linalg.solve(L.T, np.linalg.solve(L, y)) # compute alpha
+	
+	#log_likelihood = -0.5 * y.T @ a - 0.5 * np.trace(np.log(L)) - 0.5 * X.shape[0] * np.log(2*np.pi)
+	
+	log_likelihood = -0.5 * y.T @ a - 0.5 * np.log(np.linalg.det(K)) - 0.5 * X.shape[0] * np.log(2*np.pi)
+
+	return -log_likelihood
+```
+
+```python
+'''
+True function f(x) = sin(x) & X ~ Unif(-4,4) with 10 samples
+'''
+f_sin = lambda x: (np.sin(x)).flatten()
+X = np.random.uniform(-4, 4, size = (10, 1))
+y = f_sin(X)
+
+# Scipy-optimization via SLSQP
+
+lim = [10**-3, 10**3]
+bound = [lim, lim]
+start = [0.3, 0.1] # initial hyper-parameters
+result = scipy.optimize.minimize(fun = marginal, x0 = start, args = (X, y), method = 'SLSQP', options = {'disp':True}, bounds = bound, tol = 0.0001)
+```
+
+```python
+'''
+Contour Plot
+'''
+
+L = np.linspace(10**-3, 10**2, 1000)
+S = np.linspace(10**-3, 10**3, 1000)
+σ, l = np.meshgrid(L, S)
+
+func_val = np.zeros_like(σ)
+
+for i in range(σ.shape[0]):
+	for j in range(l.shape[0]):
+		func_val[i, j] = f_opt(kernel = kernel, X = X.reshape(-1,1), y = y.reshape(-1,1), σ = S[i], l = L[j])
+  
+plt.contourf(σ, l, func_val, cmap = 'plasma')
+plt.xscale('log')
+plt.yscale('log')
+plt.scatter(result.x[0], result.x[1], color = 'black', marker = 'x')
+plt.colorbar()
+plt.show()
+``` 
+
+![[contour.png | center]]
+
+
 
 

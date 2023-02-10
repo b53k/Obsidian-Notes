@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "Meeting 2 - Model Selection for GP.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               }
             }
@@ -148,10 +148,10 @@
   },
   "active": "4d7b96b9ae832c5e",
   "lastOpenFiles": [
-    "Meeting 2 - Model Selection for GP.md",
     "Meeting 2 - Model Selection for GP.pdf",
-    "Meeting 1 - Introduction to GP.pdf",
     "Meeting 1 - Introduction to GP.md",
+    "Meeting 2 - Model Selection for GP.md",
+    "Meeting 1 - Introduction to GP.pdf",
     "Templates/Template.md",
     "1 Sub-Gaussian.md",
     "2 Cyclical Monotonicity and Kantorovich.md",

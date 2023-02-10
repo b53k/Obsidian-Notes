@@ -2,5 +2,8 @@
   "accentColor": "",
   "showViewHeader": true,
   "nativeMenus": false,
-  "theme": "moonstone"
+  "theme": "moonstone",
+  "enabledCssSnippets": [
+    "center_img"
+  ]
 }

@@ -81,3 +81,9 @@ Proof:
 &= e^{-t^2/2} \ \ \big(\text{supremum over }\mu \big)
 \end{align}$$
 
+In a general case, let $\large X_1, X_2, ..., X_n$ be independent R.V.s and $\large a_j \leq X_j \leq b_j \ ;\ \ \forall j = 1,...,n$ and let $\large S_n :=\sum_{j}^n X_j$ then $$\large \mathbb{P}(|S_n - \mathbb{E}[S_n]| \geq t) \leq \text{exp }\bigg(\frac{-2t^2}{\sum_{j=1}^n(b_j - a_j)^2}\bigg)$$
+$\rightarrow X_j - \mathbb{E}[X_j] \sim SG(\frac{(b_j-a_j)^2}{4})$ 
+
+## Hoeffding Lemma
+
+
