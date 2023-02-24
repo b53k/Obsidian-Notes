@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "3e1f1a4d91d6e6a5",
+            "id": "3a14f12eb7df4318",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Meeting 2 - Model Selection for GP.md",
+                "file": "Meeting 3 - MCMC Sampling.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "4100ece0194f0dd8",
@@ -86,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Meeting 2 - Model Selection for GP.md",
+                "file": "Meeting 3 - MCMC Sampling.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Meeting 2 - Model Selection for GP.md",
+                "file": "Meeting 3 - MCMC Sampling.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Meeting 2 - Model Selection for GP.md"
+                "file": "Meeting 3 - MCMC Sampling.md"
               }
             }
           }
@@ -147,13 +146,21 @@
       "templates:Insert template": false
     }
   },
-  "active": "3e1f1a4d91d6e6a5",
+  "active": "3a14f12eb7df4318",
   "lastOpenFiles": [
-    "Meeting 2 - Model Selection for GP.pdf",
+    "Meeting 3 - MCMC Sampling.pdf",
+    "Assets/Pasted image 20230224063645.png",
+    "Assets/Pasted image 20230224063112.png",
+    "Meeting 1 - Introduction to GP.md",
+    "Meeting 3 - MCMC Sampling.md",
+    "Assets/Pasted image 20230224050133.png",
+    "Assets/Pasted image 20230224045253.png",
+    "Assets/Pasted image 20230224005539.png",
     "Meeting 2 - Model Selection for GP.md",
+    "Assets/Pasted image 20230223234607.png",
+    "Meeting 2 - Model Selection for GP.pdf",
     "Meeting 1 - Introduction to GP.pdf",
     "2023-02-23.md",
-    "Meeting 1 - Introduction to GP.md",
     "Templates/Template.md",
     "1 Sub-Gaussian.md",
     "2 Cyclical Monotonicity and Kantorovich.md",
