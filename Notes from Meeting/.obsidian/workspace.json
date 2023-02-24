@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "79a90ae11a937c46",
+        "id": "28994cd9829bde43",
         "type": "tabs",
         "children": [
           {
-            "id": "4d7b96b9ae832c5e",
+            "id": "3e1f1a4d91d6e6a5",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -69,7 +69,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "4100ece0194f0dd8",
@@ -146,12 +147,13 @@
       "templates:Insert template": false
     }
   },
-  "active": "4d7b96b9ae832c5e",
+  "active": "3e1f1a4d91d6e6a5",
   "lastOpenFiles": [
     "Meeting 2 - Model Selection for GP.pdf",
-    "Meeting 1 - Introduction to GP.md",
     "Meeting 2 - Model Selection for GP.md",
     "Meeting 1 - Introduction to GP.pdf",
+    "2023-02-23.md",
+    "Meeting 1 - Introduction to GP.md",
     "Templates/Template.md",
     "1 Sub-Gaussian.md",
     "2 Cyclical Monotonicity and Kantorovich.md",

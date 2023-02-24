@@ -33,7 +33,7 @@ We have, $\large \mathbb{P}(x_1|x_2) = \Large \frac{\mathbb{P}(x_1, x_2)}{\mathb
 collapse: open
 PDF of Multivariate Normal Distribution:
 
-$\large \mathcal{N(x; \mu, \Sigma)} = \frac{1}{\sqrt{(2\pi)^{n/2}}}|\Sigma|^{-1/2}\text{exp}(-\frac{1}{2}(x-\mu)\Sigma^{-1}(x-\mu)^T)$
+$\large \mathcal{N(x; \mu, \Sigma)} = \frac{1}{\sqrt{(2\pi)^{n}}}|\Sigma|^{-1/2}\text{exp}(-\frac{1}{2}(x-\mu)\Sigma^{-1}(x-\mu)^T)$
 ```
 
 Now, $$\large \mathbb{P}(x_1|x_2) = \frac{1}{\sqrt{(2\pi)^{n-n_2}}}\sqrt{\frac{|\Sigma_{22}|}{|\Sigma|}}\text{ exp }\Bigg[-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu) + \frac{1}{2}(x_2 - \mu_2)^T\Sigma_{22}^{-1}(x_2 - \mu_2)\Bigg]\tag{1}$$

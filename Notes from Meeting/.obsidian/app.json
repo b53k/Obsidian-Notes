@@ -9,5 +9,6 @@
   },
   "attachmentFolderPath": "./Assets",
   "spellcheck": true,
-  "readableLineLength": true
+  "readableLineLength": true,
+  "strictLineBreaks": false
 }

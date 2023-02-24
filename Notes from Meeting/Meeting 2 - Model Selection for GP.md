@@ -55,12 +55,47 @@ $$\large \mathbb{P}(f|X,\theta) = \mathcal{N}\Big(0, k(x,x')\Big) \tag{1}$$
 We can always transform the data to have zero mean and $(1)$ can be viewed as a general case. Assume that the #likelihood takes the following form $$\large \mathbb{P}(Y|f) \sim \mathcal{N}(f, \sigma_n^2I) \tag{2}$$
 $(2)$ tells that the observations $\large y$ are subject to additive Gaussian noise. Now, the joint distribution is given by; $$\large \mathbb{P}(Y,f|X,\theta) = \mathbb{P}(Y|f)\ \mathbb{P}(f|X,\theta) \tag{3}$$
 It is worth noting that we would eventually like to optimize the hyper-parameters $\theta$ for the kernel function. However, the #prior here is over the mapping $\large f$ and not any parameters directly. In the <b><i>evidence-based</i></b> framework, which approximates Bayesian averaging by optimizing the #Marginal-Likelihood we can make use of the denominator part in the <i><b>Bayes' Rule</i></b> as an objective function for optimization. For this we take the joint distribution $(3)$ and marginalize over $\large f$ since we are not directly interested in optimizing it. This can be done in the following way: $$\large \begin{align}\mathbb{P}(Y|X,\theta) &= \int \mathbb{P}(Y,f|X,\theta)\ df \\
-&= \int \mathbb{P}(Y|f)\ \mathbb{P}(f|X,\theta)\ df
+&= \int \mathbb{P}(Y|f)\ \mathbb{P}(f|X,\theta)\ df\\
+&= \int \mathcal{N}(y;f,\sigma_n^2I)\ \ \mathcal{N}(f;0, K)
 \end{align} \tag{4}$$$(4)$ is an integration performed all possible spaces of $\large f$ and it aims to remove $\large f$
 from the distribution of $\large Y$. After marginalization $\large Y$ is no longer dependent on $\large f$ but it depends on the hyper-parameters $\large \theta$.
 
 As per <span style="color: orange">Rasmussen & Williams</span>, the log marginal likelihood is given by; $$\large \text{log }\mathbb{P}(y|X,\theta) = -\frac{1}{2}y^TK_y^{-1}y - \frac{1}{2}\text{log }|K_y| - \frac{n}{2}\text{log }(2\pi) \tag{5}$$
-where $\large K_y = K_f + \sigma_n^2I$  is the covariance matrix for the noisy targets $\large y$ and $\large K_f$ is the covariance matrix for the noise-free latent $\large f$. The first term penalizes wrong prediction, second penalizes model complexity and the third monomial is normalization term.
+### Derivation
+
+Let $\Sigma = \sigma_n^2I$. Now, (4) can be fleshed out as follows; 
+$$\begin{align}
+    \mathbb{P}(y|X,\theta) & = \int \frac{1}{(2\pi)^{n/2}} |\Sigma|^{-1/2} \text{exp}\ (-\frac{1}{2} (f-y)^T\Sigma^{-1}(f-y)) \times \frac{1}{(2\pi)^{n/2}} |K|^{-1/2} \text{exp}\ (-\frac{1}{2} (f)^TK^{-1}(f))\ df \\
+    & = \frac{1}{(2\pi)^n}\frac{1}{\sqrt{|\Sigma||K|}} \int \text{exp}\ \bigg(-\frac{1}{2}\big[(f-y)^T\Sigma^{-1}(f-y) + f^TK^{-1}f\big]\bigg)\ df \\
+\end{align}\tag{6}$$
+Looking at the exponent term in (6):
+$$\begin{equation*}
+    \begin{split}
+        &= f^T(\Sigma^{-1}+K^{-1})f - 2f^T\Sigma^{-1}y + y^T\Sigma^{-1}y \\
+        &= f^T\Pi^{-1}f - 2f^T\Pi^{-1}\nu + y^T\Sigma^{-1}y\\
+        &= (f-\nu)^T\Pi^{-1}(f-\nu) - \nu^T\Pi^{-1}\nu + y^T\Sigma^{-1}y
+    \end{split}
+\end{equation*}$$
+where $\Pi = (\Sigma^{-1}+K^{-1})^{-1}$ and $\nu = \Pi\Sigma^{-1}y$.
+By definition we have;
+$$\frac{1}{\sqrt{2\pi\Pi}} \int \text{exp}\bigg[  -\frac{1}{2} (f-\nu)^T\Pi^{-1}(f-\nu)  \bigg] \ df = 1$$
+Plugging this back to (6) gives the following expression;
+$$\frac{\sqrt{(2\pi)^n|\Pi|}}{(2\pi)^n\sqrt{|\Sigma||K|}}\ \text{exp}\ \bigg[ \frac{1}{2}(\nu^T\Pi^{-1}\nu - y^T\Sigma^{-1}y)   \bigg]$$
+Substitute values for $\Pi$ and $\nu$ we get;
+$$\begin{equation*}
+    \begin{split}
+        \mathbb{P}(y|X,\theta) &= \frac{1}{(2\pi)^{n/2}} \bigg(\big|\Sigma\big|\big|K\big|\big|\Sigma^{-1}+K^{-1}\big|\bigg)^{-1/2} \text{exp}\ \bigg[-\frac{1}{2}\big(y^T\Sigma^{-1}(\Sigma^{-1}+K^{-1})^{-1}K^{-1}y\big) \bigg] \\
+        &= \frac{1}{(2\pi)^{n/2}} \bigg(\big|\Sigma\big|\big|K\big|\big|\frac{\Sigma + K}{\Sigma K}\big|\bigg)^{-1/2} \text{exp}\ \bigg[-\frac{1}{2}\big(y^T\Sigma^{-1}(  \frac{K + \Sigma}{\Sigma K}  )^{-1}K^{-1}y\big) \bigg] \\
+        &= \frac{1}{(2\pi)^{n/2}} \bigg(\big|\Sigma + K \big|\bigg)^{-1/2} \text{exp}\ \bigg[-\frac{1}{2}\big(y^T(  K + \Sigma)^{-1}y\big) \bigg] \\
+        &= \frac{1}{(2\pi)^{n/2}} \bigg(\big|\sigma_n^2I + K \big|\bigg)^{-1/2} \text{exp}\ \bigg[-\frac{1}{2}\big(y^T(  K + \sigma_n^2I)^{-1}y\big) \bigg] \\
+        &= \frac{1}{(2\pi)^{n/2}} \big|K_y \big|^{-1/2} \text{exp}\ \bigg[-\frac{1}{2}y^TK_y^{-1}y \bigg] \\
+    \end{split}
+\end{equation*}$$
+
+Taking log on both sides yields (5)
+
+Note that this expression depends on the hyperparameters $\theta$ of the kernel function through the kernel matrix $K$, which depends on the input values $x_i$ and the values of the hyperparameters. Therefore, the log marginal likelihood can be used to optimize the hyperparameters of the kernel function using numerical optimization techniques such as gradient descent or L-BFGS.
+
 
 ## Gradients of Marginal Likelihood
 
