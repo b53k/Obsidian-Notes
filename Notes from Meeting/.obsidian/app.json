@@ -10,5 +10,6 @@
   "attachmentFolderPath": "./Assets",
   "spellcheck": true,
   "readableLineLength": true,
-  "strictLineBreaks": false
+  "strictLineBreaks": true,
+  "useTab": true
 }

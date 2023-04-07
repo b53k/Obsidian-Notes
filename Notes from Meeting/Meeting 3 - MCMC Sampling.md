@@ -10,7 +10,7 @@
 
 ## Motivation
 
-We're all familiar with Bayes Theorem which powers many inference models. If we want to estimate the parameter $\theta$ of a distribution based on the data, we have the following: $$\large \mathbb{P}(\theta|data) = \frac{\mathbb{P}(\text{data}|\theta)\ \mathbb{P}(\text{data})}{\mathbb{P}(data)}$$
+We're all familiar with Bayes Theorem which powers many inference models. If we want to estimate the parameter $\theta$ of a distribution based on the data, we have the following: $$\large \mathbb{P}(\theta|data) = \frac{\mathbb{P}(\text{data}|\theta)\ \mathbb{P}({\theta})}{\mathbb{P}(data)}$$
 where, $\large \mathbb{P}(\text{data}) = \int_{\theta}\mathbb{P}(\text{data}|\theta)\ \mathbb{P}(\text{data})\ d\theta$. Suppose there are three unknown parameters $\alpha, \beta$ and $\gamma$ for a distribution, then the integral we need to evaluate across the search-space of these parameters becomes:
 $$\large \mathbb{P}(\alpha,\beta,\gamma|\text{data}) = \int_{\gamma}\int_{\beta}\int_{\alpha}\mathbb{P}(\text{data}|\theta)\mathbb{P}(\alpha,\beta,\gamma)\ d\alpha\ d\beta\ d\gamma \tag{1}$$
 These types of integrals are not always analytically tractable. Therefore we need to resort to sampling based technique to estimate the posterior distribution.
@@ -87,18 +87,17 @@ Overall, the convergence of Monte-Carlo integration is determined by a combinati
 collapse: open
 title: Algorithm
 
-* Initialize, $X_1 = x_1$ as current state
-* $\forall\ t = 1,2,...$ do:
-	* sample proposed state $x_{t+1}$ from $Q(x_{t+1}|x_t)$
-	* $\alpha = \min\Large \bigg(1, \Large \frac{\pi(x_{t+1})}{\pi(x_t)}\frac{Q(x_t|x_{t+1})}{Q(x_{t+1}|x_t)}\bigg)$
-	* if $\alpha >=$ Unif~(0,1):
-				$x_{t} = x_{t+1}$ i.e. current state = proposed state
-	  else:
-			$x_{t} = x_{t}$ i.e. current state = current state
+* Initialize the Markov chain with an initial state $x_0$
+* $\forall \ t = 1,2,\ldots$ do:
+	* Generate a candidate state $x^*$ from a proposal distribution $Q(x_t|x_{t-1})$
+	* Calculate the acceptance probability $$\large \alpha(x_t, x^*) = \min \bigg(\large 1, \frac{P(x^*)}{P(x_t)} \frac{Q(x_t|x^*)}{Q(x^*|x_t)}\bigg)$$
+	* where $P(x)$ is the target distribution
+	* Generate a uniform random number $u \sim \text{Unif}(0,1)$
+	* $x_{t+1} = \begin{cases} x^*, & \text{if } u \leq \alpha(x_t, x^*) \\ x_t, & \text{otherwise}\end{cases}$
 ```
 
 When the proposed distribution $\large Q$ is symmetric the hasting ratio 
-$$\frac{Q(x_t|x_{t+1})}{Q(x_{t+1}|x_{t})} = 1 \tag{10}$$  
+$$\frac{Q(x_t|x^*)}{Q(x^*|x_{t})} = 1 \tag{10}$$
 
 ![[Pasted image 20230224063112.png | center]]
 
@@ -217,3 +216,118 @@ plt.title('Metropolis-Hastings Sampling')
 plt.legend(['Target Density', 'Generated Samples'])
 plt.show()
 ```
+
+## MCMC for GP
+
+Algorithm for estimating the distribution for hyper-parameters.
+```ad-note
+collapse:open
+title:MCMC Algorithm
+
+* Initialize hyper-parameters $h_i$ $\in \mathbb{R}^d$ (in this case d = 2 i.e. $\sigma$ & $l$ )
+* $\eta = I_d \times$ jitter and noise = $\sigma_n^2$
+* $\forall \ i = 1,2.....$ do:
+	* Get: un-normalized posterior_i $\leftarrow$ $h_i, \sigma_n^2, X, y$
+	* Update $h_i$: $h_j = h_i + \mathcal{N}(0, \eta)$
+	* Get: un-normalized posterior_j $\leftarrow h_j, \sigma_n^2, X, y$
+	* Accept-Reject-Prob (A_R_P) = un-normalized posterior_j - un-normalized posterior_i
+	* r = Unif $\sim$ (0,1)
+	* if log(r) $\leq$ A_R_P:
+		* $h_i = h_j$
+	* hyp_store[i, 0] = $h_i$[0]
+	* hyp_store[i, 1] = $h_i$[1]
+* return hyp_store, A_R_P
+```
+
+```python
+def mcmc_main_function(hyperparameters_i, iters, seed_value, noise_variance, X, y): 
+
+    np.random.seed(seed_value)
+    number_of_priors = 2
+    jitter = 1e-4
+    eta = np.diag(np.ones((number_of_priors))) * jitter
+    accepted_counter = 0
+
+    # Go through loop!
+    counter = 0
+    hyp_store = np.zeros((iters, 2))
+    for i in range(iters):
+        unnormalized_post_i = unnormalized_posterior(hyperparameters_i, noise_variance, X, y)
+        hyperparameters_j = hyperparameters_i + np.random.multivariate_normal(np.zeros((2)), eta)
+        unnormalized_post_j = unnormalized_posterior(hyperparameters_j, noise_variance, X, y)
+
+        # Accept/Reject step!
+        accept_reject_prob = unnormalized_post_j - unnormalized_post_i
+        r = np.random.rand()
+        if np.log(r) <= accept_reject_prob:
+            hyperparameters_i = hyperparameters_j
+            accepted_counter = accepted_counter + 1
+        hyp_store[i, 0] = hyperparameters_i[0]
+        hyp_store[i, 1] = hyperparameters_i[1]
+        #print('Iteration '+str(i)+'  '+str(accept_reject_prob))
+        
+    return hyp_store, accept_reject_prob
+
+def unnormalized_posterior(hyperparameters, noise_variance, X, y):
+    """
+    Computation of the unnormalized prior.
+    :param Measurementplane self:
+        An instance of the measurement plane.
+    :param numpy array xo:
+        A numpy array of priors.
+    """
+    Kxx = kernel(X, X, hyperparameters)
+    Z = Kxx + noise_variance * np.eye(y.shape[0])
+    try:
+        likelihood = scipy.stats.multivariate_normal.logpdf(y, mean=np.zeros((len(y))), cov=Z)
+    except np.linalg.LinAlgError:
+        print('got here!')
+        return -np.inf
+    
+    # Sample from the prior distribution!
+    prior_alpha = scipy.stats.multivariate_normal.logpdf(hyperparameters, mean=np.zeros((2,)), \
+                                                         cov=np.eye(2)*1.0)
+    unnormalized_posterior = likelihood + prior_alpha 
+    return unnormalized_posterior
+
+f_sin = lambda x: (np.sin(x)).flatten()
+X = np.random.uniform(-4, 4, size = (10, 1))
+y = f_sin(X)
+y_useme = y - np.mean(y)
+
+hyperparameters_init = [3.3, 5.2]
+rnd_seed = 13434
+mcmc_iters = 100000
+noise_variance = 1e-2
+post_hyp, accept_reject_prob = mcmc_main_function(hyperparameters_init, mcmc_iters, rnd_seed, \
+                                                  noise_variance, X, y_useme)
+
+fig = plt.figure(figsize=(10,3))
+plt.plot(post_hyp[:,0], '-', label='$\sigma$')
+plt.plot(post_hyp[:,1], 'r-', label='$l$')
+plt.xlabel('Iterations')
+plt.ylabel('Hyperparameter values')
+plt.legend()
+plt.show()
+
+plt.plot(post_hyp[20000:,0], post_hyp[20000:,1], 'ko', markersize=2, markerfacecolor='k', alpha=0.2)
+plt.xlabel('$\sigma$')
+plt.ylabel('$l$')
+plt.show()
+
+plt.hist(post_hyp[20000:,0], 40, alpha = 0.9, label='$\sigma$')
+plt.hist(post_hyp[20000:,1], 40, alpha = 0.8, label = 'l')
+plt.title('PDF for $\sigma$ and l')
+plt.legend()
+plt.show()
+```
+
+![[Pasted image 20230309234319.png | center]]
+<center><small>Fig: Samples obtained via MCMC</small></center>
+
+![[Pasted image 20230309233843.png | center]]
+<center><small>Fig: Joint PDF of kernel parameters</small></center>
+
+
+![[Pasted image 20230310010229.png | center]]
+<center><small>Fig: Distributions of hyper-parameters</small></center>

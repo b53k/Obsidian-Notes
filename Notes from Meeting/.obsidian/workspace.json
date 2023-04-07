@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "28994cd9829bde43",
+        "id": "1c15da18289f5244",
         "type": "tabs",
         "children": [
           {
-            "id": "3a14f12eb7df4318",
+            "id": "5fb855a7667d5acb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Meeting 3 - MCMC Sampling.md",
+                "file": "Meeting 4 - MCMC using Hamiltonian Dynamics.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Meeting 3 - MCMC Sampling.md",
+                "file": "Meeting 4 - MCMC using Hamiltonian Dynamics.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Meeting 3 - MCMC Sampling.md",
+                "file": "Meeting 4 - MCMC using Hamiltonian Dynamics.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Meeting 3 - MCMC Sampling.md"
+                "file": "Meeting 4 - MCMC using Hamiltonian Dynamics.md"
               }
             }
           }
@@ -146,26 +146,35 @@
       "templates:Insert template": false
     }
   },
-  "active": "3a14f12eb7df4318",
+  "active": "5fb855a7667d5acb",
   "lastOpenFiles": [
-    "Meeting 3 - MCMC Sampling.pdf",
-    "Assets/Pasted image 20230224063645.png",
-    "Assets/Pasted image 20230224063112.png",
-    "Meeting 1 - Introduction to GP.md",
-    "Meeting 3 - MCMC Sampling.md",
-    "Assets/Pasted image 20230224050133.png",
-    "Assets/Pasted image 20230224045253.png",
-    "Assets/Pasted image 20230224005539.png",
+    "GP.ipynb",
+    "HMC.ipynb",
+    "Meeting 4 - MCMC using Hamiltonian Dynamics.pdf",
+    "Assets/joint.png",
+    "Assets/Pasted image 20230407022039.png",
+    "Assets/Pasted image 20230407021631.png",
+    "Assets/Pasted image 20230407021530.png",
+    "Assets/Pasted image 20230407021501.png",
+    "Assets/Pasted image 20230407015638.png",
     "Meeting 2 - Model Selection for GP.md",
-    "Assets/Pasted image 20230223234607.png",
-    "Meeting 2 - Model Selection for GP.pdf",
+    "Meeting 4 - MCMC using Hamiltonian Dynamics.md",
+    "Meeting 4 - MCMC using Hamiltonian Dynamics.html",
+    "Pasted image 20230404160114.png.md",
+    "Assets/Pasted image 20230404203002.png",
+    "Assets/Pasted image 20230404202129.png",
+    "Assets/Pasted image 20230404161720.png",
+    "Assets/frog.png",
+    "Meeting 3 - MCMC Sampling.md",
     "Meeting 1 - Introduction to GP.pdf",
+    "Meeting 3 - MCMC Sampling.pdf",
+    "Meeting 2 - Model Selection for GP.pdf",
+    "Meeting 1 - Introduction to GP.md",
     "2023-02-23.md",
     "Templates/Template.md",
     "1 Sub-Gaussian.md",
     "2 Cyclical Monotonicity and Kantorovich.md",
     "1 Introduction and 1-D Monge.md",
-    "Untitled.canvas",
-    "Assets/Pasted image 20230111164526.png"
+    "Untitled.canvas"
   ]
 }
