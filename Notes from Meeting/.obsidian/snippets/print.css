@@ -1,0 +1,14 @@
+@media print {
+    /* Set the page size to auto, so it will be a continuous page */
+    @page {
+        size: auto;
+    }
+
+    /* Remove page breaks to make the content continuous */
+    * {
+        break-inside: avoid;
+        break-after: auto;
+        break-before: auto;
+    }
+}
+
